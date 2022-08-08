@@ -1,0 +1,20 @@
+void CPPUNIT_ASSERT(bool condition) {
+    if (!condition)
+        __coverity_panic__();
+}
+
+class SBuf {
+    public:
+    SBuf(const char *S, unsigned int n) {
+     __coverity_string_size_sanitize__((void*)S);
+    }
+};
+
+void Must(bool condition) {
+    if (!condition)
+        __coverity_panic__();
+}
+
+void exit(int result) {
+        __coverity_panic__();
+}
