@@ -1,0 +1,2 @@
+# Squid Project CI
+
