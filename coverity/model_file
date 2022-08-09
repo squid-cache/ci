@@ -18,3 +18,15 @@ void Must(bool condition) {
 void exit(int result) {
         __coverity_panic__();
 }
+
+namespace __coverity_template__
+{
+
+class RefCount
+{
+    void dereference(void const *newP = nullptr) { p_ = newP; }
+    void reference(const RefCount& ) {}
+    void const *p_;
+};
+
+}
