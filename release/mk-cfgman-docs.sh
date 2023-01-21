@@ -16,12 +16,12 @@ cd ${webpath}/content/Doc/config
 
 # Detect which v3 releases exist right now and grok them all.
 # TODO: ignore these versions as also no longer changing.
-VERS3=`ls -1t ${webpath}/Versions/v3/ | grep -v "CVS|sig.dyn"`
+VERS3=`ls -1t ${webpath}/content/Versions/v3/ | grep -v "CVS|sig.dyn"`
 for v in ${VERS3} "$@" ; do
 #	echo "FOUND: $v"
-	if test -d ${webpath}/Versions/v3/${v}/cfgman ; then
+	if test -d ${webpath}/content/Versions/v3/${v}/cfgman ; then
 #	echo "SCAN: ${v}/cfgman"
-	for directive in ${webpath}/Versions/v3/${v}/cfgman/*.html; do
+	for directive in ${webpath}/content/Versions/v3/${v}/cfgman/*.html; do
 		directive=`basename $directive .html`
 		case $directive in
 		index|index_all|"*")
@@ -42,12 +42,12 @@ for v in ${VERS3} "$@" ; do
 done
 
 # Dynamically detect which v4+ releases exist right now and grok them all.
-VERS4=`ls -1t ${webpath}/Versions/ | grep -v "CVS|sig.dyn"`
+VERS4=`ls -1t ${webpath}/content/Versions/ | grep -v "CVS|sig.dyn"`
 for v in ${VERS4} "$@" ; do
 #	echo "FOUND: $v"
-	if test -d ${webpath}/Versions/${v}/cfgman ; then
+	if test -d ${webpath}/content/Versions/${v}/cfgman ; then
 #	echo "SCAN: ${v}/cfgman"
-	for directive in ${webpath}/Versions/${v}/cfgman/*.html; do
+	for directive in ${webpath}/content/Versions/${v}/cfgman/*.html; do
 		directive=`basename $directive .html`
 		case $directive in
 		index|index_all|"*")
