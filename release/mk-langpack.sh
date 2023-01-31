@@ -13,7 +13,13 @@ webpath=`cat ~/.website-path`
 filedir=${webpath}/content/Versions/langpack
 
 # Location of the repository checkout
-vcsdir=/srv/sources/squid-master
+vcspath=`cat ~/.code-vcs-path`
+vcsver=`ls -1 $vcspath | cut -d- -f2 | sort -h`
+vcsdir="${vcspath}squid-${vcsver}"
+if ! test -d $vcsdir ; then
+	echo "ERROR: failed to locate Squid VCS"
+	exit 1
+fi
 
 cd $filedir
 
