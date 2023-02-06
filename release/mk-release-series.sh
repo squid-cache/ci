@@ -52,7 +52,7 @@ fi
     git add configure.ac
 
   echo " .. add Release Notes ..."
-  sed -e s/@SQUID_RELEASE_OLD@/$OLDVER/g <doc/release-notes/template.sgml >doc/release-notes/release-${NEWVER}.sgml.in &&
+  cp doc/release-notes/template.sgml doc/release-notes/release-${NEWVER}.sgml.in &&
     git add doc/release-notes/release-${NEWVER}.sgml.in
 
   if `git diff HEAD` ; then
