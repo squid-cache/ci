@@ -14,7 +14,7 @@ test -e ~/.server.config && . ~/.server.config || exit 1
 filedir=$SQUID_WWW_PATH/content/Versions/langpack
 
 # auto-detect the latest 'major' version number
-SQUID_RELEASE=`ls -1 $SQUID_VCS_PATH | cut -d- -f2 | sort -h`
+SQUID_RELEASE=`ls -1 $SQUID_VCS_PATH | cut -d- -f2 | sort -h | tail -n 1`
 
 # Location of the latest versions repository checkout
 vcsdir="${SQUID_VCS_PATH}squid-${SQUID_RELEASE}"
