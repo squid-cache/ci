@@ -13,33 +13,7 @@ cd ${webpath}/content/Doc/config
 
 # Ignore v1 since it does not publish this type of documentation
 # Ignore v2 since it is no longer changing
-
-# Detect which v3 releases exist right now and grok them all.
-# TODO: ignore these versions as also no longer changing.
-VERS3=`ls -1t ${webpath}/content/Versions/v3/ | grep -v "CVS|sig.dyn"`
-for v in ${VERS3} "$@" ; do
-#	echo "FOUND: $v"
-	if test -d ${webpath}/content/Versions/v3/${v}/cfgman ; then
-#	echo "SCAN: ${v}/cfgman"
-	for directive in ${webpath}/content/Versions/v3/${v}/cfgman/*.html; do
-		directive=`basename $directive .html`
-		case $directive in
-		index|index_all|"*")
-			:
-			;;
-		*)
-			if [ ! -d $directive ]; then
-				echo "Updating $v docs for $directive"
-				mkdir $directive
-				ln -s ../template.dyn $directive/index.dyn
-			else
-				touch -c $directive/index.dyn
-			fi
-			;;
-		esac
-	done
-	fi
-done
+# Ignore v3 since it is no longer changing
 
 # Dynamically detect which v4+ releases exist right now and grok them all.
 VERS4=`ls -1t ${webpath}/content/Versions/ | grep -v "CVS|sig.dyn"`
