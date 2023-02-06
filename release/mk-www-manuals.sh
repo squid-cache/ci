@@ -4,8 +4,9 @@
 # from latest releases of each version.
 #
 
-webpath=`cat ~/.website-path`
-cd ${webpath}/content/Versions/
+test -e ~/.server.config && . ~/.server.config || exit 1
+
+cd ${SQUID_WWW_PATH}/content/Versions/
 
 for v in `ls -1`; do
 	if test "$v" = "." -o "$v" = ".." -o "$v" = "CVS" -o "$v" = "langpack" -o ! -d $v; then
