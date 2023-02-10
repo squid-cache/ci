@@ -17,7 +17,7 @@ filedir=$SQUID_WWW_PATH/content/Versions/langpack
 SQUID_RELEASE=`ls -1 $SQUID_VCS_PATH | cut -d- -f2 | sort -h | tail -n 1`
 
 # Location of the latest versions repository checkout
-vcsdir="${SQUID_VCS_PATH}squid-${SQUID_RELEASE}"
+vcsdir="$SQUID_VCS_PATH/squid-$SQUID_RELEASE"
 if ! test -d $vcsdir ; then
 	echo "ERROR: failed to locate Squid VCS"
 	exit 1
