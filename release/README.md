@@ -11,7 +11,7 @@ Publish the latest [Squid Translation Package](http://www.squid-cache.org/Versio
 
 ### mk-release-series.sh
 
-Branch and publish a new [Squid Series](https://wiki.squid-cache.org/ReleaseSchedule).
+Branch and publish the next [Squid Series](https://wiki.squid-cache.org/ReleaseSchedule).
 
 ### mk-www-manuals.sh
 
