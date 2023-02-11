@@ -5,7 +5,7 @@
 # available in the www service
 #
 
-test -e ~/.server.config && . ~/.server.config || exit 1
+. ~/.server.config || exit $?
 
 cd `dirname $0`/..
 
