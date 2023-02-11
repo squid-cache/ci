@@ -8,7 +8,7 @@
 #  To force a build with todays snapshot pass "--force" as the first parameter
 #
 
-test -e ~/.server.config && . ~/.server.config || exit 1
+. ~/.server.config || exit $?
 
 # Location where the langpack files are published
 filedir=$SQUID_WWW_PATH/content/Versions/langpack

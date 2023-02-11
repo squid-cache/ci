@@ -4,7 +4,7 @@
 # from latest releases of each version.
 #
 
-test -e ~/.server.config && . ~/.server.config || exit 1
+. ~/.server.config || exit $?
 
 cd ${SQUID_WWW_PATH}/content/Versions/
 

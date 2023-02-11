@@ -1,6 +1,6 @@
 #!/bin/sh
 
-test -e ~/.server.config && . ~/.server.config || exit 1
+. ~/.server.config || exit $?
 
 # Find latest version number
 cd $SQUID_VCS_PATH
