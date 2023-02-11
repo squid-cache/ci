@@ -10,8 +10,9 @@ if ! test -f $SQUID_VCS_PATH/squid-$OLDVER/.BASE ; then
 else
   echo " . Promoting Squid-$OLDVER to Beta Release ..."
   cd squid-$OLDVER
-  git checkout github/v$OLDVER || exit 1
+  git checkout github/`cat .BASE` || exit 1
   git push -u origin v$OLDVER
+  git push -u github v$OLDVER
   rm .BASE
 fi
 
@@ -24,7 +25,7 @@ else
   cd $SQUID_VCS_PATH
   git clone git@github.com:squidadm/squid.git squid-$NEWVER
   cd squid-$NEWVER
-  git remote add github https://github.com/squid-cache/squid.git
+  git remote add github git@github.com:squid-cache/squid.git
   echo "master" >.BASE
   ln -s $SQUID_VCS_PATH/gitignore $SQUID_VCS_PATH/squid-$NEWVER/.git/info/exclude
 
@@ -39,17 +40,13 @@ fi
   cd $SQUID_VCS_PATH/squid-$NEWVER
   echo " .. update configure.ac ..."
   git checkout v${NEWVER}-maintenance
-  sed -e 's/${OLDVER}.0.0-VCS/${NEWVER}.0.0-VCS/' <configure.ac >configure.ac.2 &&
+  sed -e s/${OLDVER}.0.0-VCS/${NEWVER}.0.0-VCS/ <configure.ac >configure.ac.2 &&
     mv configure.ac.2 configure.ac &&
     git add configure.ac
 
   echo " .. add Release Notes ..."
-  cp doc/release-notes/release-N.template doc/release-notes/release-${NEWVER}.sgml &&
-    git add doc/release-notes/release-${NEWVER}.sgml
-  echo " .. auto-build new Release Notes ..."
-  sed -e 's/DOC= release-$OLDVER/DOC= release-$NEWVER/' <doc/release-notes/Makefile.am >notes.tmp &&
-    mv notes.tmp doc/release-notes/Makefile.am &&
-    git add doc/release-notes/Makefile.am &&
+  cp doc/release-notes/template.sgml doc/release-notes/release-${NEWVER}.sgml.in &&
+    git add doc/release-notes/release-${NEWVER}.sgml.in
 
   if `git diff HEAD` ; then
     git commit -m "Branch ${NEWVER}.0.0"
