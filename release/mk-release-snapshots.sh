@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 #
 # Publish Alpha releases (a.k.a. daily snapshot)
 #
