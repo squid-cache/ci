@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Publish Alpha releases (a.k.a. daily snapshot)
+# Publish the latest development release (a.k.a. daily snapshot)
 #
 
 . ~/.server.config || exit $?
