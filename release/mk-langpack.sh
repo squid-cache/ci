@@ -8,12 +8,20 @@
 #  To force a build with todays snapshot pass "--force" as the first parameter
 #
 
-# Location where the langpack files are published
-webpath=`cat ~/.website-path`
-filedir=${webpath}/content/Versions/langpack
+. ~/.server.config || exit $?
 
-# Location of the repository checkout
-vcsdir=/srv/sources/squid-master
+# Location where the langpack files are published
+filedir=$SQUID_WWW_PATH/content/Versions/langpack
+
+# auto-detect the latest 'major' version number
+SQUID_RELEASE=`ls -1 $SQUID_VCS_PATH | cut -d- -f2 | sort -h | tail -n 1`
+
+# Location of the latest versions repository checkout
+vcsdir="$SQUID_VCS_PATH/squid-$SQUID_RELEASE"
+if ! test -d $vcsdir ; then
+	echo "ERROR: failed to locate Squid VCS"
+	exit 1
+fi
 
 cd $filedir
 
