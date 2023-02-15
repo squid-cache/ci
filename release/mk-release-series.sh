@@ -38,8 +38,9 @@ fi
 ## Update "master" branch code
 #
   cd $SQUID_VCS_PATH/squid-$NEWVER
+  git checkout -b v${NEWVER}-release-prep &&
+  git push -u origin v${NEWVER}-release-prep
   echo " .. update configure.ac ..."
-  git checkout v${NEWVER}-maintenance
   sed -e s/${OLDVER}.0.0-VCS/${NEWVER}.0.0-VCS/ <configure.ac >configure.ac.2 &&
     mv configure.ac.2 configure.ac &&
     git add configure.ac
@@ -49,9 +50,9 @@ fi
     git add doc/release-notes/release-${NEWVER}.sgml.in
 
   if `git diff HEAD` ; then
-    git commit -m "Branch ${NEWVER}.0.0"
+    git commit -m "${NEWVER}.0.0"
     git push
-    # github PR created by maintenance automation
+    gh pr create --repo squid-cache/squid --base master --fill
   fi
 
 #
