@@ -23,3 +23,7 @@ Branch and publish the next [Squid Series](https://wiki.squid-cache.org/ReleaseS
 ### mk-www-manuals.sh
 
 Publish the latest [Squid Tool Manuals](http://www.squid-cache.org/Doc/man/).
+
+### update-rsync.sh
+
+Update rsync server directories with latest bundled source code.
