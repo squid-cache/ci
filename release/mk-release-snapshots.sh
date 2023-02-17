@@ -8,7 +8,7 @@
 # auto-detect the latest 'major' version number
 SQUID_RELEASE=`ls -1 $SQUID_VCS_PATH | cut -d- -f2 | sort -h | tail -n 1`
 
-# Hostname of CI build server
+# Hostname of the CI server where snapshots are built
 SQUID_BUILD_SERVER=buildmaster.squid-cache.org
 
 # file Jenkins uses to assemble the list of snapshot files
