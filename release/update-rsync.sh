@@ -1,4 +1,4 @@
-#!/bin/sh -eu -o pipefail
+#!/bin/sh
 #
 # Update rsync server directories with latest bundled source code
 # This will update rsync to the latest snapshot OR release tarball
