@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -eu -o pipefail
 #
 # Update rsync server directories with latest bundled source code
 # This will update rsync to the latest snapshot OR release tarball
@@ -7,12 +7,15 @@
 
 . ~/.server.config || exit $?
 
-cd `dirname $0`/..
+# ensure we have a clean staging directory
+test -e /tmp/update-rsync.d &&
+	echo "ERROR: Garbage found at /tmp/update-rsync.d" &&
+	exit 1
+mkdir -p /tmp/update-rsync.d
 
 for version in `ls -1 $SQUID_VCS_PATH | grep squid | cut -d- -f2`; do
-	rm -rf tmp
-	mkdir -p tmp/squid-$version
 
+	# locate newest tarball, allow for variation in compression
 	src=""
 	for type in xz bz2 gz; do
 		src=`ls -1t $SQUID_WWW_PATH/content/Versions/v$version/squid-$version*.tar.$type 2>/dev/null | grep -v snapshot | head -n 1`
@@ -20,9 +23,17 @@ for version in `ls -1 $SQUID_VCS_PATH | grep squid | cut -d- -f2`; do
 	done
 	test -z "$src" && echo "ERROR: could not find any XZ, BZip2, or GZip tarballs for squid-$version" && continue
 
-	tar -C tmp/squid-$version --strip-components 1 -a -x -f $src 2>&1 |
+	# extract found tarball to staging area
+	tar -C /tmp/update-rsync.d --strip-components 1 -a -x -f $src 2>&1 |
 		grep -v "Invalid empty pathname" |
 		grep -v "Error exit delayed from previous errors" || true
-	rsync -aO --delete tmp/squid-$version/ $SQUID_RSYNC_PATH/squid-$version/
+
+	# mirror staging area to published code
+	rsync -aO --delete /tmp/update-rsync.d/ $SQUID_RSYNC_PATH/squid-$version/
+
+	rm -rf /tmp/update-rsync.d/*
 done
-rm -rf tmp
+
+# POSIX requirement: do not leave garbage in /tmp
+# this also helps above detection of broken automation
+rm -rf /tmp/update-rsync.d
