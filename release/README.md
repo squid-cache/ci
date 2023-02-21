@@ -18,7 +18,6 @@ The `crontab` configuration driving this automation:
 21 */2 * * * bin/release/mk-cfgman-docs.sh
 23 */2 * * * bin/release/mk-langpack.sh
 25 */2 * * * bin/release/mk-www-manuals.sh
-27 */2 * * * bin/release/update-rsync.sh
 ```
 
 ### mk-cfgman-docs.sh
@@ -48,6 +47,15 @@ This script is intended to be run manually with review of the changes is perform
 Publish the latest [Squid Tool Manuals](http://www.squid-cache.org/Doc/man/).
 
 Fully automated ROLLING release.
+
+---
+
+## Automated Server Updates
+
+The `crontab` configuration driving this automation:
+```
+27 */2 * * * bin/release/update-rsync.sh
+```
 
 ### update-rsync.sh
 
