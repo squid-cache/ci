@@ -36,12 +36,6 @@ Fully automated ROLLING release.
 
 Branch and publish the next [Squid Series](https://wiki.squid-cache.org/ReleaseSchedule).
 
-This script serves two roles:
- 1. a checklist for release manager(s) on tasks required to branch a new major release series of Squid.
- 2. a script to ease those tasks as much as possible.
-
-This script is intended to be run manually with review of the changes is performed, and additional steps are required for the complete process.
-
 ### mk-www-manuals.sh
 
 Publish the latest [Squid Tool Manuals](http://www.squid-cache.org/Doc/man/).
