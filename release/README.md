@@ -24,6 +24,10 @@ Branch and publish the next [Squid Series](https://wiki.squid-cache.org/ReleaseS
 
 Publish the latest [Squid Tool Manuals](http://www.squid-cache.org/Doc/man/).
 
+### update-ftp.sh
+
+Update [FTP server](ftp://ftp.squid-cache.org/pub/archive/) directories with latest release packages.
+
 ### update-rsync.sh
 
 Update rsync server directories with latest bundled source code.
