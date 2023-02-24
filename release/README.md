@@ -49,7 +49,12 @@ Fully automated ROLLING release.
 The `crontab` configuration driving this automation:
 ```
 27 */2 * * * bin/release/update-rsync.sh
+29 */2 * * * bin/release/update-ftp.sh
 ```
+
+### update-ftp.sh
+
+Update [FTP server](ftp://ftp.squid-cache.org/pub/archive/) directories with latest release packages.
 
 ### update-rsync.sh
 
