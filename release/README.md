@@ -63,3 +63,19 @@ Update [FTP server](ftp://ftp.squid-cache.org/pub/archive/) directories with lat
 ### update-rsync.sh
 
 Update rsync server directories with latest bundled source code.
+
+---
+
+## Announcement Templates for Maintainers
+
+### announce-beta.txt
+
+For announcing a new Squid series has moved from development to beta cycle.
+
+### announce-stable.txt
+
+For announcing a Squid series has moved from beta to stable cycle.
+
+### announce-release.txt
+
+For announcing a generic release of an existing Squid series
