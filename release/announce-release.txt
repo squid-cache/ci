@@ -1,0 +1,78 @@
+[ Replace @AUTHOR@ @SQUID_VERSION@ @SQUID_RELEASE@ @SQUID_OLD_RELEASE@ ]
+[ @SQUID_VERSION@ may include suffix " beta" if relevant ]
+[ as needed replace @SQUID_BUG_ID@ @SQUID_BUG_TITLE@ @SQUID_ADVISORY_ID@ @SQUID_ADVISORY_TITLE@ ]
+
+To: squid-announce
+Subject: Squid @SQUID_VERSION@ is available
+
+
+The Squid HTTP Proxy team is very pleased to announce the
+availability of the Squid-@SQUID_VERSION@ release!
+
+
+This release is a [ security / bug fix ] release resolving [some/several/many] issues
+found in the prior Squid releases.
+
+The major changes to be aware of:
+
+[ for any security issue fixed ]
+ * @SQUID_ADVISORY_ID@ @SQUID_ADVISORY_TITLE@
+   (CVE-*-* ... any other IDs assigned)
+
+[ verbatim "Problem Description:" section of our advisory ]
+
+[ verbatim "Severity:" section of our advisory ]
+
+
+[ for each important or higher bug fix ]
+ * Bug @SQUID_BUG_ID@: @SQUID_BUG_TITLE@
+
+[ simple description of admin visible symptoms ]
+This bug shows up as ...
+
+[ simple description of new behaviour seen after fix, if significant ]
+This release ...
+
+
+[ for each/any significant change without bugzilla IDs ]
+ * [ title ]
+
+[ simple description of behaviour change and any relevant admin actions ]
+
+
+[ repeat as necessary for each relevant "feature X" ]
+  All users of Squid-@SQUID_RELEASE@ [with feature X] are [encouraged | urged]
+  to upgrade as [time permits | soon as possible].
+
+  All [other] users of Squid-@SQUID_RELEASE@ are [encouraged | urged] to
+  upgrade as [time permits | soon as possible].
+
+[ for beta releases, or if relevant for CVE issue unfixed ]
+  All users of Squid-@SQUID_OLD_RELEASE@ are encouraged to
+  test this release and plan for upgrade as [time permits | soon as possible].
+
+
+See the ChangeLog for the full list of changes in this and
+earlier releases.
+
+Please refer to the release notes at
+http://www.squid-cache.org/Versions/v@SQUID_RELEASE@/RELEASENOTES.html
+when you are ready to make the switch to Squid-@SQUID_RELEASE@
+
+This new release can be downloaded from our HTTP or FTP servers
+
+http://www.squid-cache.org/Versions/v@SQUID_RELEASE@/
+ftp://ftp.squid-cache.org/pub/squid/
+ftp://ftp.squid-cache.org/pub/archive/@SQUID_RELEASE@/
+
+or the mirrors. For a list of mirror sites see
+
+http://www.squid-cache.org/Download/http-mirrors.html
+http://www.squid-cache.org/Download/mirrors.html
+
+If you encounter any issues with this release please file a bug
+report.
+https://bugs.squid-cache.org/
+
+
+@AUTHOR@

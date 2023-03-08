@@ -1,0 +1,91 @@
+[ Replace @AUTHOR@ @SQUID_RELEASE@ @SQUID_OLD_RELEASE@ ]
+
+To: squid-announce
+Subject: Squid @SQUID_RELEASE@.1 is available
+
+
+The Squid HTTP Proxy team is very pleased to announce the availability
+of the Squid-@SQUID_RELEASE@.1 release!
+
+
+This release is we believe, stable enough for general production use.
+
+
+Support for Squid-@SQUID_OLD_RELEASE@ bug fixes has now officially ceased. Bugs in @SQUID_OLD_RELEASE@.x
+will continue to be fixed, however the fixes will be added to the @SQUID_RELEASE@.x
+series. All users of Squid-@SQUID_OLD_RELEASE@.x are encouraged to plan for upgrades.
+
+
+A short list of the major new features is:
+
+[ verbatim titles from release notes "Major new features since" section ]
+ * ...
+ * ...
+ * ...
+
+
+Some features have been removed in @SQUID_RELEASE@.1:
+
+[ list from release notes when relevant ]
+ * ... title ...
+ * ... title ...
+
+
+Further details can be found in the release notes or the wiki.
+ http://www.squid-cache.org/Versions/v@SQUID_RELEASE@/RELEASENOTES.html
+ https://wiki.squid-cache.org/Squid-@SQUID_RELEASE@
+
+
+Please remember to run "squid -k parse" when testing upgrade to a new
+version of Squid. It will audit your configuration files and report
+any identifiable issues the new release will have in your installation
+before you "press go".
+
+
+All feature additions are considered *experimental* until they have
+survived at least one series of releases in general production use.
+Please be aware of that when rolling out features which are new in
+this series. Not all use-cases have been well tested yet and some may
+not even have been implemented. Assistance is still needed despite the
+releases general stability level.
+
+
+Plans for the next series of releases is already well underway. Our
+future release plan and upcoming features can be found at:
+  https://wiki.squid-cache.org/ReleaseSchedule
+  https://wiki.squid-cache.org/RoadMap
+
+
+ See the ChangeLog for the full list of changes in this and earlier
+ releases.
+
+  All users of Squid-@SQUID_RELEASE@.0 beta releases are urged to
+  upgrade to this release as soon as possible.
+
+  All users of Squid-@SQUID_OLD_RELEASE@ are encouraged to
+  upgrade where possible.
+
+
+See the ChangeLog for the full list of changes in this and earlier
+releases.
+
+Please refer to the release notes at
+http://www.squid-cache.org/Versions/v@SQUID_RELEASE@/RELEASENOTES.html
+when you are ready to make the switch to Squid-@SQUID_RELEASE@
+
+This new release can be downloaded from our HTTP or FTP servers
+
+  http://www.squid-cache.org/Versions/v@SQUID_RELEASE@/
+  ftp://ftp.squid-cache.org/pub/squid/
+  ftp://ftp.squid-cache.org/pub/archive/@SQUID_RELEASE@/
+
+or the mirrors. For a list of mirror sites see
+
+  http://www.squid-cache.org/Download/http-mirrors.html
+  http://www.squid-cache.org/Download/mirrors.html
+
+If you encounter any issues with this release please file a bug report.
+  https://bugs.squid-cache.org/
+
+
+@AUTHOR@

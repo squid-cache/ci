@@ -1,0 +1,64 @@
+[ Replace @AUTHOR@ and @SQUID_RELEASE@ ]
+
+To: squid-announce
+Subject: Squid @SQUID_RELEASE@.0.1 beta is available
+
+
+The Squid Software Foundation is very pleased to announce the
+availability of the Squid-@SQUID_RELEASE@.0.1 beta release!
+
+
+This new @SQUID_RELEASE@.x series of Squid brings useful new features and changes
+providing improved performance over earlier release series.
+
+More detailed descriptions of the major new features are available in
+the release notes and wiki:
+  <http://www.squid-cache.org/Versions/v@SQUID_RELEASE@/RELEASENOTES.html>
+  <https://wiki.squid-cache.org/Releases/Squid-@SQUID_RELEASE@>
+
+Detailed lists of the ./configure build and squid.conf changes can also
+be found in the release notes.
+
+This code is released as beta for wider testing purposes and potential
+use. There are no more planned alterations to the existing features,
+./configure options or squid.conf options.
+
+
+[ simple description of major new features / behaviour changes ]
+[ possibly quote the release notes descriptions ]
+This release adds ...
+
+
+Major features dropped:
+
+[ for each removed feature / component ]
+ * [ feature X ]
+
+[ simple description of behaviour change, ]
+[ any relevant admin actions for upgrade / transition to alternatives ]
+...
+
+
+  All users are encouraged to give this Squid release a test run as soon
+  as time permits. All feedback welcome.
+
+
+Please refer to the release notes at
+<http://www.squid-cache.org/Versions/v@SQUID_RELEASE@/RELEASENOTES.html> if and when
+you are ready to make the switch to Squid-@SQUID_RELEASE@
+
+This new release can be downloaded from our HTTP or FTP servers
+
+  <http://www.squid-cache.org/Versions/v@SQUID_RELEASE@/>
+  <ftp://ftp.squid-cache.org/pub/squid/>
+  <ftp://ftp.squid-cache.org/pub/archive/@SQUID_RELEASE@/>
+
+or the mirrors. For a list of mirror sites see
+
+  <http://www.squid-cache.org/Download/http-mirrors.html>
+  <http://www.squid-cache.org/Download/mirrors.html>
+
+If you encounter any issues with this release please file a bug report.
+  <https://bugs.squid-cache.org/>
+
+@AUTHOR@
