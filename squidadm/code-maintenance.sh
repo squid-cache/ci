@@ -18,7 +18,7 @@ gitCleanWorkspace ()
 {
 #  git clean $beQuiet -df --exclude="\.BASE"
   git clean $beQuiet -xdf --exclude="\.BASE"
-  git checkout -- .
+  git checkout $beQuiet -- .
 }
 
 runMaintenanceScript ()
@@ -27,15 +27,15 @@ runMaintenanceScript ()
   branch=$2
   prtitle=$3
 
-  if test -x $script ; then
+  if test -x "$script" ; then
 
-    git checkout $beQuiet $forkPoint &&
-      git checkout $beQuiet $branch &&
+    git checkout $beQuiet $forkPoint 2>/dev/null &&
+      git checkout $beQuiet $branch 2>/dev/null &&
         gitCleanWorkspace &&
-          git rebase github/$forkPoint || ( git rebase --abort ; exit 1 )
+          git rebase github/$forkPoint 2>/dev/null || ( git rebase --abort 2>/dev/null ; exit 1 )
 
     gitCleanWorkspace &&
-      $script || exit 1
+      $script >/dev/null || exit 1
 
     # only update modified files. Ignore deleted, added, etc.
     git status 2>&1 | grep "modified:" | while read a b; do git add $b; done
@@ -62,12 +62,11 @@ runMaintenanceScript ()
   version=`basename "$1" | sed s/squid-//`
 
   forkPoint="v$version"
-  if [ -f .BASE ]; then
+  if test -f .BASE ; then
     forkPoint=`cat .BASE`
-    echo "forkPoint=$forkPoint"
   fi
 
-  if [ ! -d .git ]; then
+  if ! test -d .git ; then
     echo "ERROR: missing git repository"
     exit 1;
   fi
@@ -94,7 +93,7 @@ runMaintenanceScript ()
   prlist=`gh pr list -L 1 --repo squid-cache/squid --state closed --label backport-to-v$version | wc -l`
   if test "$prlist" -ne 0; then
     echo "PENDING Backports:"
-    gh pr list --repo squid-cache/squid --state closed --label backport-to-v5
+    gh pr list --repo squid-cache/squid --state closed --label backport-to-v$version
 
     # TODO automatically backport a merged PR based on github labels 'backport-to-vN'
     # TODO automatically remove label from PRs on successful commit+push to vN-next-backports
@@ -102,6 +101,5 @@ runMaintenanceScript ()
   fi
 
 ) 2>&1 | \
-	grep -v "warning: AC_TRY_RUN called without default" | \
-	grep -v "bootstrapping complete"
+	grep -v "warning: AC_TRY_RUN called without default"
 true
