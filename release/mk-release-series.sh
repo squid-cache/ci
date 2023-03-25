@@ -131,22 +131,6 @@ fi
     chmod g+w $subd || nuclearFallout
   done
 
-  echo " .. populating Versions/v$NEWVER/changesets/ ..."
-## TODO drop the whole changesets/ system
-  cd $SQUID_WWW_PATH/content/Versions/v$NEWVER/changesets/ &&
-    (
-      echo "Squid $NEWVER" >.version
-      for page in .lastrevno .lastupdate ; do
-        cp -p ../../v$OLDVER/changesets/$page . || /bin/true
-      done
-## TODO move these scripts to CI/release or drop
-      ln -s /home/squidadm/bin/update-patches-git .update
-      ln -s /home/squidadm/bin/maint-group-patches .group
-      ln -s /home/squidadm/bin/maint-merged-patches .merged
-      ln -s /home/squidadm/bin/maint-nomerge-patches .nomerge
-      ./.update
-    ) || nuclearFallout
-
 ## TODO update the web server VCS system with the new files we just created
 
 echo " ."
