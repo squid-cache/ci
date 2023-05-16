@@ -126,7 +126,7 @@ fi
     cp -p ../v$OLDVER/$page . || nuclearFallout
   done
   ln -s ../sig.dyn sig.dyn || nuclearFallout
-  for subd in cfgman manuals changesets ; do
+  for subd in cfgman manuals ; do
     mkdir $subd || nuclearFallout
     chmod g+w $subd || nuclearFallout
   done
