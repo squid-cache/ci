@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Publish the latest development release (a.k.a. daily snapshot)
 #
@@ -9,23 +9,40 @@
 SQUID_RELEASE=`ls -1 $SQUID_VCS_PATH | cut -d- -f2 | sort -h | tail -n 1`
 
 # Hostname of the CI server where snapshots are built
-SQUID_BUILD_SERVER=buildmaster.squid-cache.org
+SQUID_BUILD_SERVER=build.squid-cache.org
 
 # file Jenkins uses to assemble the list of snapshot files
 outfile=HEAD.out
 
+# arguments:
+# jenkins job name
+# destination directory
+get_artifacts() {
+	local job=$1
+	local outdir=$2
+	local artifactsUrl="https://$SQUID_BUILD_SERVER/job/${job}/lastSuccessfulBuild/artifact/artifacts/*zip*/artifacts.zip"
+	wget --quiet "$artifactsUrl"
+	if [ ! -e artifacts.zip ] ; then
+		echo "could not download artifacts from $artifactsUrl"
+		return 1
+	fi
+	unzip -qq artifacts.zip
+	if [ ! -d artifacts ]; then
+		echo "${job}:artifacts.zip does not contain a subdirectory"
+		return 1;
+	fi
+	mv artifacts/* $outdir
+	rmdir artifacts
+	rm artifacts.zip
+	return 0
+}
+cd /var/tmp
+
 ver=$SQUID_RELEASE
-(rsync -rcz --delete-delay rsync://$SQUID_BUILD_SERVER/snapshots-head/squid-${ver}* $SQUID_WWW_PATH/content/Versions/v$ver/ 2>/dev/null &&
-rsync -rcz --delete-delay rsync://$SQUID_BUILD_SERVER/snapshots-head/$outfile $SQUID_WWW_PATH/content/Versions/v$ver/ 2>/dev/null
-) ||
-	echo "rsync pull squid-$ver code snapshots from BuildFarm failed"
+get_artifacts website-tarballs-head $SQUID_WWW_PATH/content/Versions/v$ver/
 
 ver=$(( $ver - 1 ))
-(rsync -rcz --delete-delay rsync://$SQUID_BUILD_SERVER/snapshots-latest/squid-${ver}* $SQUID_WWW_PATH/content/Versions/v$ver/ 2>/dev/null &&
-rsync -rcz --delete-delay rsync://$SQUID_BUILD_SERVER/snapshots-latest/$outfile $SQUID_WWW_PATH/content/Versions/v$ver/ 2>/dev/null ) ||
-	echo "rsync pull squid-$ver code snapshots from BuildFarm failed"
+get_artifacts website-tarballs-latest $SQUID_WWW_PATH/content/Versions/v$ver/
 
 ver=$(( $ver - 1 ))
-(rsync -rcz --delete-delay rsync://$SQUID_BUILD_SERVER/snapshots-old/squid-${ver}* $SQUID_WWW_PATH/content/Versions/v$ver/ 2>/dev/null &&
-rsync -rcz --delete-delay rsync://$SQUID_BUILD_SERVER/snapshots-old/$outfile $SQUID_WWW_PATH/content/Versions/v$ver/ 2>/dev/null ) ||
-	echo "rsync pull squid-$ver code snapshots from BuildFarm failed"
+get_artifacts website-tarballs-old $SQUID_WWW_PATH/content/Versions/v$ver/
