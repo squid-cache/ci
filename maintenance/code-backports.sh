@@ -62,8 +62,8 @@ if test "$prlist" -ne 0; then
         echo "$msg" | grep -E "^error:"
         unlabel=`echo "$msg" | grep -E "The.previous.cherry-pick.is.now.empty"`
         if ! test -z "$unlabel" ; then
-            gh pr edit $prnum --remove-label backport-to-v$version
-            gh pr comment $prnum --body "queued for backport to v$version"
+            gh pr edit --repo squid-cache/squid $prnum --remove-label backport-to-v$version
+            gh pr comment --repo squid-cache/squid $prnum --body "queued for backport to v$version"
         fi
       fi
       gitCleanWorkspace
