@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Publish the latest development release (a.k.a. daily snapshot)
 #
