@@ -21,12 +21,18 @@ get_artifacts() {
 	local job=$1
 	local outdir=$2
 	local artifactsUrl="https://$SQUID_BUILD_SERVER/job/${job}/lastSuccessfulBuild/artifact/artifacts/*zip*/artifacts.zip"
-	if ! wget --quiet --ca-cert=/etc/ssl/certs/ISRG_Root_X1.pem "$artifactsUrl"; then
+	rm artifacts.zip 2>&1 >/dev/null
+	if ! wget --quiet --ca-cert=/etc/ssl/certs/ISRG_Root_X1.pem "$artifactsUrl" ; then
 		echo "could not download artifacts from $artifactsUrl"
 		return 1
 	fi
-	unzip -qq artifacts.zip
-	if [ ! -d artifacts ]; then
+ 	rmdir -f artifacts 2>&1 >/dev/null
+	if ! unzip -qq artifacts.zip ; then
+		echo "could not extract files from ${job}:artifacts.zip"
+		rmdir -f artifacts 2>&1 >/dev/null
+  		return 1
+ 	fi
+	if ! test -d artifacts ; then
 		echo "${job}:artifacts.zip does not contain a subdirectory"
 		rm -d `unzip -Z1 artifacts.zip`
 		rm -f artifacts.zip
