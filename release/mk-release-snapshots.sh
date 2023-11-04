@@ -21,8 +21,7 @@ get_artifacts() {
 	local job=$1
 	local outdir=$2
 	local artifactsUrl="https://$SQUID_BUILD_SERVER/job/${job}/lastSuccessfulBuild/artifact/artifacts/*zip*/artifacts.zip"
-	wget --quiet --ca-cert=/etc/ssl/certs/ISRG_Root_X1.pem "$artifactsUrl"
-	if [ ! -e artifacts.zip ] ; then
+	if ! wget --quiet --ca-cert=/etc/ssl/certs/ISRG_Root_X1.pem "$artifactsUrl"; then
 		echo "could not download artifacts from $artifactsUrl"
 		return 1
 	fi
@@ -38,7 +37,8 @@ get_artifacts() {
 	rm artifacts.zip
 	return 0
 }
-cd /var/tmp
+
+cd /var/tmp || exit $?
 
 ver=$SQUID_RELEASE
 get_artifacts website-tarballs-head $SQUID_WWW_PATH/content/Versions/v$ver/
