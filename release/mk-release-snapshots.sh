@@ -32,7 +32,7 @@ get_artifacts() {
  	    echo "Failed to cleanup stale `pwd`/artifacts" 1>&2
  	    return 1
  	fi
-	if ! unzip -qq artifacts.zip ; then
+	if ! unzip -u -o -qq artifacts.zip ; then
 		echo "Failed to extract files from ${job}:artifacts.zip" 1>&2
 		rm -rf artifacts >/dev/null 2>&1
   		return 1
