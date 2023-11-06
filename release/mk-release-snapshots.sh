@@ -21,32 +21,31 @@ get_artifacts() {
 	local job=$1
 	local outdir=$2
 	local artifactsUrl="https://$SQUID_BUILD_SERVER/job/${job}/lastSuccessfulBuild/artifact/artifacts/*zip*/artifacts.zip"
-	rm artifacts.zip 2>&1 >/dev/null
+	rm -f artifacts.zip >/dev/null 2>&1
 	if ! wget --quiet --ca-cert=/etc/ssl/certs/ISRG_Root_X1.pem "$artifactsUrl" ; then
-		echo "could not download artifacts from $artifactsUrl"
+		echo "Failed to download artifacts from $artifactsUrl" 1>&2
 		return 1
 	fi
- 	rm -r -f artifacts > /dev/null 2>&1
- 	if test -e artifacts
- 	then
- 	    rm -r -f artifacts # now show the previously hidden error
+ 	rm -r artifacts >/dev/null 2>&1
+ 	if test -e artifacts ; then
+ 	    rm -rf artifacts
  	    echo "Failed to cleanup stale `pwd`/artifacts" 1>&2
  	    return 1
  	fi
 	if ! unzip -qq artifacts.zip ; then
-		echo "could not extract files from ${job}:artifacts.zip"
-		rmdir -f artifacts 2>&1 >/dev/null
+		echo "Failed to extract files from ${job}:artifacts.zip" 1>&2
+		rm -rf artifacts >/dev/null 2>&1
   		return 1
  	fi
 	if ! test -d artifacts ; then
-		echo "${job}:artifacts.zip does not contain a subdirectory"
+		echo "${job}:artifacts.zip does not contain a subdirectory" 1>&2
 		rm -d `unzip -Z1 artifacts.zip`
 		rm -f artifacts.zip
 		return 1
 	fi
-	mv artifacts/* $outdir
-	rmdir artifacts
 	rm artifacts.zip
+	mv artifacts/* $outdir
+	rm -rf artifacts
 	return 0
 }
 
