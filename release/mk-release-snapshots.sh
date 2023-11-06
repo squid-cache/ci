@@ -26,7 +26,13 @@ get_artifacts() {
 		echo "could not download artifacts from $artifactsUrl"
 		return 1
 	fi
- 	rmdir -f artifacts 2>&1 >/dev/null
+ 	rm -r -f artifacts > /dev/null 2>&1
+ 	if test -e artifacts
+ 	then
+ 	    rm -r -f artifacts # now show the previously hidden error
+ 	    echo "Failed to cleanup stale `pwd`/artifacts" 1>&2
+ 	    return 1
+ 	fi
 	if ! unzip -qq artifacts.zip ; then
 		echo "could not extract files from ${job}:artifacts.zip"
 		rmdir -f artifacts 2>&1 >/dev/null
