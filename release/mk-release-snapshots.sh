@@ -38,7 +38,7 @@ get_artifacts() {
   		return 1
  	fi
 	if ! test -d artifacts ; then
-		echo "${job}:artifacts.zip does not contain a subdirectory" 1>&2
+		echo "${job}:artifacts.zip does not contain an 'artifacts/' directory" 1>&2
 		rm -d `unzip -Z1 artifacts.zip`
 		rm -f artifacts.zip
 		return 1
