@@ -18,7 +18,11 @@ nuclearFallout ()
   # wipeout the VCS new version staging
   cd $SQUID_VCS_PATH/squid-$NEWVER &&
     git checkout master &&
-      git branch -dD v$NEWVER-maintenance
+      (
+        git branch -dD v$NEWVER-bootstrap || true
+        git branch -dD v$NEWVER-maintenance || true
+        git branch -dD v$NEWVER-next-backports || true
+      )
   cd $SQUID_VCS_PATH &&
     rm -rf $SQUID_VCS_PATH/squid-$NEWVER
   echo ""
@@ -66,8 +70,12 @@ else
   ln -s $SQUID_VCS_PATH/gitignore $SQUID_VCS_PATH/squid-$NEWVER/.git/info/exclude
 
   echo " .. Creating maintenance branches ..."
+  git checkout -b v${NEWVER}-bootstrap &&
+    git push -u origin v${NEWVER}-bootstrap
   git checkout -b v${NEWVER}-maintenance &&
     git push -u origin v${NEWVER}-maintenance
+  git checkout -b v${NEWVER}-next-backports &&
+    git push -u origin v${NEWVER}-next-backports
 fi
 
 #
