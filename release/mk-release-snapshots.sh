@@ -44,7 +44,7 @@ get_artifacts() {
 		return 1
 	fi
 	rm artifacts.zip
-	mv artifacts/* $outdir
+	mv artifacts/* $outdir || ( rm -rf artifacts ; return 1 )
 	rm -rf artifacts
 	return 0
 }
