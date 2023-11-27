@@ -28,7 +28,7 @@ get_artifacts() {
 	fi
  	rm -r artifacts >/dev/null 2>&1
  	if test -e artifacts ; then
- 	    rm -rf artifacts
+ 	    rm -r artifacts
  	    echo "Failed to cleanup stale `pwd`/artifacts" 1>&2
  	    return 1
  	fi
