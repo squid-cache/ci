@@ -46,7 +46,7 @@ runMaintenanceScript ()
     # only update modified files. Ignore deleted, added, etc.
     git status 2>&1 | grep "modified:" | while read a b; do git add $beQuiet $b >/dev/null; done
     git commit $beQuiet --all -m "$prtitle" >/dev/null || true
-    git push $beQuiet -f --set-upstream origin +$branch >/dev/null || exit 1
+    git push $beQuiet -f --set-upstream origin +$branch 2>&1 >/dev/null 2>&1 || exit 1
     gitCleanWorkspace
 
     if test `git diff $beQuiet $forkPoint $branch 2>/dev/null | wc -l` -ne 0 ; then
