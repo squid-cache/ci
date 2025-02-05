@@ -21,6 +21,12 @@ gitCleanWorkspace ()
   git checkout $beQuiet -- .
 }
 
+abortAndExit ()
+{
+  git "$1" --abort 2>&1 >/dev/null
+  exit 1
+}
+
 runMaintenanceScript ()
 {
   script=$1
@@ -29,18 +35,18 @@ runMaintenanceScript ()
 
   if test -x "$script" ; then
 
-    git checkout $beQuiet $forkPoint 2>/dev/null &&
-      git checkout $beQuiet $branch 2>/dev/null &&
+    git checkout $beQuiet $forkPoint 2>&1 >/dev/null &&
+      git checkout $beQuiet $branch 2>&1 >/dev/null &&
         gitCleanWorkspace &&
-          git rebase github/$forkPoint 2>/dev/null || ( git rebase --abort 2>/dev/null ; exit 1 )
+          git rebase github/$forkPoint 2>&1 >/dev/null || abortAndExit rebase
 
     gitCleanWorkspace &&
       $script >/dev/null || exit 1
 
     # only update modified files. Ignore deleted, added, etc.
-    git status 2>&1 | grep "modified:" | while read a b; do git add $b; done
-    git commit $beQuiet --all -m "$prtitle" || true
-    git push $beQuiet -f --set-upstream origin +$branch || exit 1
+    git status 2>&1 | grep "modified:" | while read a b; do git add $beQuiet $b >/dev/null; done
+    git commit $beQuiet --all -m "$prtitle" >/dev/null || true
+    git push $beQuiet -f --set-upstream origin +$branch >/dev/null || exit 1
     gitCleanWorkspace
 
     if test `git diff $beQuiet $forkPoint $branch 2>/dev/null | wc -l` -ne 0 ; then
@@ -56,7 +62,6 @@ runMaintenanceScript ()
   fi
 }
 
-
 (
   cd $1
   version=`basename "$1" | sed s/squid-//`
@@ -71,20 +76,21 @@ runMaintenanceScript ()
     exit 1;
   fi
 
-  git fetch $beQuiet --all
-  gitCleanWorkspace
-
-  git pull $beQuiet --all
+  git fetch $beQuiet --all >/dev/null
   gitCleanWorkspace
 
   # Update version branch to match github
-  git checkout $beQuiet $forkPoint
-  # ON CONFLICTS: abort
-  git rebase github/$forkPoint || ( git rebase --abort ; exit 1 )
+  git checkout $beQuiet $forkPoint >/dev/null
+
+  git pull $beQuiet --all >/dev/null
   gitCleanWorkspace
 
-  git push $beQuiet -f --set-upstream origin +$forkPoint 2>&1
-  git push $beQuiet --tags github
+  # ON CONFLICTS: abort
+  git rebase github/$forkPoint >/dev/null || abortAndExit rebase
+  gitCleanWorkspace
+
+  git push $beQuiet -f --set-upstream origin +$forkPoint 2>&1 >/dev/null
+  git push $beQuiet --tags github 2>&1 >/dev/null
   gitCleanWorkspace
 
   runMaintenanceScript ./bootstrap.sh v$version-bootstrap "Bootstrapped"
