@@ -112,7 +112,7 @@ fi
   mkdir v$NEWVER &&
     cd v$NEWVER &&
     chmod g+w . || nuclearFallout
-  for page in index.dyn ChangeLog.dyn RELEASENOTES.dyn CONTRIBUTORS.txt ; do
+  for page in index.dyn ChangeLog.dyn RELEASENOTES.dyn ; do
     cp -p ../v$OLDVER/$page . || nuclearFallout
   done
   ln -s ../sig.dyn sig.dyn || nuclearFallout
