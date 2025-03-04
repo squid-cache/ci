@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 SUPPORTED_VERSIONS=[6]
+BETA_VERSIONS=[7]
 
 from subprocess import check_output
 import json
@@ -30,9 +31,17 @@ for r in SUPPORTED_VERSIONS:
             break
 print("EOF;")
 
+print("$beta_versions=<<<EOF")
+for r in BETA_VERSIONS:
+    for release in releases:
+        if release['tagName'].split('_')[1] == str(r):
+            print(render_release(release))
+            break
+print("EOF;")
+
 print("$older_versions=<<<EOF")
 for r in major_releases:
-    if r in SUPPORTED_VERSIONS:
+    if r in SUPPORTED_VERSIONS + BETA_VERSIONS:
         continue
     for release in releases:
         if release['tagName'].split('_')[1] == str(r):
