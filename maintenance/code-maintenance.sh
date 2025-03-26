@@ -51,8 +51,8 @@ runMaintenanceScript ()
 
     if test `git diff --shortstat $forkPoint $branch 2>/dev/null | wc -l` -ne 0 ; then
       # skip if there is an existing PR already open awaiting merge
-      prlist=`gh pr list -L 1 --repo squid-cache/squid --head $branch`
-      if ! test -z "$prlist" ; then
+      prlist=`gh pr list -L 1 --repo squid-cache/squid --head $branch | grep -v "no pull requests match"`
+      if test -z "$prlist" ; then
         gh pr create --repo squid-cache/squid --base $forkPoint --fill
       fi
       # wait for this set of changes to complete before submittng more
