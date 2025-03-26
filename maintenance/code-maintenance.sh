@@ -49,7 +49,7 @@ runMaintenanceScript ()
     git push $beQuiet -f --set-upstream origin +$branch 2>&1 >/dev/null || exit 1
     gitCleanWorkspace
 
-    if test `git diff $beQuiet $forkPoint $branch 2>/dev/null | wc -l` -ne 0 ; then
+    if test `git diff --shortstat $forkPoint $branch 2>/dev/null | wc -l` -ne 0 ; then
       # skip if there is an existing PR already open awaiting merge
       prlist=`gh pr list -L 1 --repo squid-cache/squid --head $branch`
       if ! test -z "$prlist" ; then
