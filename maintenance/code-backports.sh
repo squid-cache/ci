@@ -72,7 +72,7 @@ if test "$prlist" -ne 0; then
   git push $beQuiet 2>&1 >/dev/null || true
 
   # Create a PR to merge (if needed)
-  if test `git diff github/$srcbranch v$version-next-backports 2>/dev/null | wc -l` -ne 0 ; then
+  if test `git diff --shortstat github/$srcbranch v$version-next-backports 2>/dev/null | wc -l` -ne 0 ; then
     git push $beQuiet -u origin +v$version-next-backports >/dev/null || exit 1
     # skip if there is an existing PR already open awaiting merge
     prlist=`gh pr list -L 1 --repo squid-cache/squid --head v$version-next-backports | wc -l`
