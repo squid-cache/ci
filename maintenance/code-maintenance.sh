@@ -40,8 +40,11 @@ runMaintenanceScript ()
         gitCleanWorkspace &&
           git rebase github/$forkPoint 2>&1 >/dev/null || abortAndExit rebase
 
-    gitCleanWorkspace &&
-      $script >/dev/null || exit 1
+    (
+      gitCleanWorkspace &&
+        $script >/dev/null || exit 1
+    ) 2>&1 |
+      grep -v "parallel-tests: installing 'cfgaux/test-driver'"
 
     # only update modified files. Ignore deleted, added, etc.
     git status 2>&1 | grep "modified:" | while read a b; do git add $b 2>&1 >/dev/null; done
