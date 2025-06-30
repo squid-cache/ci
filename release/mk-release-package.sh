@@ -1,6 +1,7 @@
 #!/bin/sh
 
 set -u -o pipefail
+
 repo=""
 origin="origin"
 upstream="upstream"
@@ -10,20 +11,6 @@ savedargs=$@
 changelog_file=${changelog_file:-ChangeLog}
 # sets SIGNKEY, EMAIL, GPGHOME. May set other variables
 test -f "$HOME/.squidrelease.rc" && . "$HOME/.squidrelease.rc"
-
-# args: variable and tool name. if variable is empty, bail
-require() { if test -z "$1"; then echo "$2 is required"; exit 1; fi }
-
-# test for tools
-SED="${SED:-`which gsed`}"; SED="${SED:-`which sed`}"; require "${SED:-}" sed
-FGREP=${FGREP:-`which fgrep`}; FGREP="${FGREP:-`which fgrep`}"; require "${FGREP:-}" fgrep
-GPG=${GPG:-`which gpg`}; require "${GPG:-}" gpg
-GH=${GH:-`which gh`}; require "${GH:-}" gh
-po2html=`which po2html`; require "$po2html" po2html
-po2txt=`which po2txt`; require "$po2txt" po2txt
-
-require "${SIGNKEY:-}" "SIGNKEY setting"
-require "${EMAIL:-}" "EMAIL setting"
 
 usage() {
 cat <<_EOF
@@ -46,10 +33,64 @@ and helps prepare it for merge.
 _EOF
 }
 
+while getopts "hR:o:u:bpg:" optchar ; do
+    case "${optchar}" in
+    h) usage; exit 0;;
+    R) repo="-R ${OPTARG}";;
+    o) origin="$OPTARG";;
+    u) upstream="$OPTARG";;
+    b) backfill="yes";;
+    p) push="yes";;
+    g) GPGHOME="$OPTARG";;
+    -) break;;
+    esac
+done
+shift $((OPTIND -1))
+
+if test $# -lt 2; then
+    usage
+    exit 2
+fi
+
+staging_branch="staging-v$new_version"
+
+# args: variable and tool name. if variable is empty, bail
+require() { if test -z "$1"; then echo "$2 is required"; exit 1; fi }
+
+basedir=`mktemp -d`; require "$basedir" "safe staging area"
+
+# test for tools
+SED="${SED:-`which gsed`}"; SED="${SED:-`which sed`}"; require "${SED:-}" sed
+FGREP=${FGREP:-`which fgrep`}; FGREP="${FGREP:-`which fgrep`}"; require "${FGREP:-}" fgrep
+GPG=${GPG:-`which gpg`}; require "${GPG:-}" gpg
+GH=${GH:-`which gh`}; require "${GH:-}" gh
+po2html=`which po2html`; require "$po2html" po2html
+po2txt=`which po2txt`; require "$po2txt" po2txt
+
+require "${SIGNKEY:-}" "SIGNKEY setting"
+require "${EMAIL:-}" "EMAIL setting"
+
+new_version="$1"
+old_version="$2"
+
+new_tag=SQUID_`echo $new_version | tr . _`
+old_tag=SQUID_`echo $old_version | tr . _`
+
+current_branch=`git branch --show-current`
+release_prep_branch="prep-v${new_version}"
+tmp_changelog_file="ChangeLog-$new_version"
+release_changelog_file="/tmp/${tmp_changelog_file}"
+
+echo "new: $new_tag old: $old_tag"
+echo "repository: $repo"
+
+
 nuclearFallout ()
 {
     # wipeout the staging area and branch
-
+    rm -rf "$basedir"
+    git branch -dD "v${new_version}-staging" && git push --repo squid-cache/squid -d "v${new_version}-staging"
+    
     exit 1
 }
 
@@ -62,6 +103,17 @@ have_tag () {
 have_branch () {
     git branch -l "$1" | $FGREP -q "$1"
     return $?
+}
+
+setup_staging () {
+  echo " . Creating Squid-$new_version release staging area ..."
+  git clone git@github.com:squidadm/squid.git $basedir/squid-$new_version || nuclearFallout
+  cd $basedir/squid-$new_version || nuclearFallout
+  git remote add $upstream git@github.com:squid-cache/squid.git || nuclearFallout
+
+  echo " .. Create staging branch ..."
+  git checkout --repo squid-cache/squid -b v${new_version}-staging &&
+    git push -u squid-cache/squid +v${new_version}-staging || nuclearFallout
 }
 
 # as a side effect, set variables with timestamps.
@@ -108,9 +160,9 @@ EOF
 
 package_release () {
     # actually prep the release
+    setup_staging
     setup_release_timestamps $new_tag
 
-    git clean -fdx
     ./bootstrap.sh
     $SED -i~ "s@${new_version}-\(VCS\|CVS\)@${new_version}@" configure.ac && rm configure.ac~
     $SED -i~ "s@${new_version}-\(VCS\|CVS\)@${new_version}@" configure && rm configure~
@@ -145,39 +197,6 @@ package_release () {
     fi
     echo $pushcmd
 }
-
-while getopts "hR:o:u:bpg:" optchar ; do
-    case "${optchar}" in
-    h) usage; exit 0;;
-    R) repo="-R ${OPTARG}";;
-    o) origin="$OPTARG";;
-    u) upstream="$OPTARG";;
-    b) backfill="yes";;
-    p) push="yes";;
-    g) GPGHOME="$OPTARG";;
-    -) break;;
-    esac
-done
-shift $((OPTIND -1))
-
-if [ $# -lt 2 ]; then
-    usage
-    exit 2
-fi
-
-new_version="$1"
-old_version="$2"
-
-new_tag=SQUID_`echo $new_version | tr . _`
-old_tag=SQUID_`echo $old_version | tr . _`
-
-current_branch=`git branch --show-current`
-release_prep_branch="prep-v${new_version}"
-tmp_changelog_file="ChangeLog-$new_version"
-release_changelog_file="/tmp/${tmp_changelog_file}"
-
-echo "new: $new_tag old: $old_tag"
-echo "repository: $repo"
 
 # check that old tag exists
 # TODO: move to new-release only
