@@ -19,20 +19,11 @@ SED="${SED:-`which gsed`}"; SED="${SED:-`which sed`}"; require "${SED:-}" sed
 FGREP=${FGREP:-`which fgrep`}; FGREP="${FGREP:-`which fgrep`}"; require "${FGREP:-}" fgrep
 GPG=${GPG:-`which gpg`}; require "${GPG:-}" gpg
 GH=${GH:-`which gh`}; require "${GH:-}" gh
+po2html=`which po2html`; require "$po2html" po2html
+po2txt=`which po2txt`; require "$po2txt" po2txt
 
 require "${SIGNKEY:-}" "SIGNKEY setting"
 require "${EMAIL:-}" "EMAIL setting"
-
-po2html=`which po2html`
-if test -z "$po2html" ; then
-    echo "cannot find po2html"
-    exit 1
-fi
-po2txt=`which po2txt`
-if test -z "$po2txt" ; then
-    echo "cannot find po2txt"
-    exit 1
-fi
 
 usage() {
 cat <<_EOF
@@ -55,13 +46,20 @@ and helps prepare it for merge.
 _EOF
 }
 
+nuclearFallout ()
+{
+    # wipeout the staging area and branch
+
+    exit 1
+}
+
 # argument: a tag. Returns 0 if the tag exists, 1 if it doesn't
-have_tag() {
+have_tag () {
     git tag -l "$1" | $FGREP -q "$1"
     return $?
 }
 
-have_branch() {
+have_branch () {
     git branch -l "$1" | $FGREP -q "$1"
     return $?
 }
@@ -69,7 +67,7 @@ have_branch() {
 # as a side effect, set variables with timestamps.
 # gets as argument a tag; if the tag exists, then
 # use it as a timestamp, otherwise use the current date.
-setup_release_timestamps() {
+setup_release_timestamps () {
     test -n "${release_timestamp:-}" && return 0
     if have_tag $1; then
         release_timestamp=`git show --pretty=%ct --no-patch $1`
@@ -82,7 +80,7 @@ setup_release_timestamps() {
 
 # argument: the files to be signed
 # uses GPG, SIGNKEY, EMAIL, GPGHOME
-signfiles() {
+signfiles () {
     setup_release_timestamps $new_tag
     for file; do
         size="`stat $file | awk '/Size:/ {print $2;}'`"
@@ -108,7 +106,7 @@ EOF
     done
 }
 
-package_release() {
+package_release () {
     # actually prep the release
     setup_release_timestamps $new_tag
 
@@ -172,7 +170,6 @@ old_version="$2"
 
 new_tag=SQUID_`echo $new_version | tr . _`
 old_tag=SQUID_`echo $old_version | tr . _`
-
 
 current_branch=`git branch --show-current`
 release_prep_branch="prep-v${new_version}"
