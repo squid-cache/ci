@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 set -u -o pipefail
 repo=""
@@ -12,7 +12,7 @@ changelog_file=${changelog_file:-ChangeLog}
 test -f "$HOME/.squidrelease.rc" && . "$HOME/.squidrelease.rc"
 
 # args: variable and tool name. if variable is empty, bail
-require() { if [ -z "$1" ]; then echo "$2 is required"; exit 1; fi }
+require() { if test -z "$1"; then echo "$2 is required"; exit 1; fi }
 
 # test for tools
 SED="${SED:-`which gsed`}"; SED="${SED:-`which sed`}"; require "${SED:-}" sed
@@ -127,7 +127,7 @@ package_release() {
     export new_version
     awk "/^Changes (in|to) squid-${new_version} /{flag=2} /^$/{flag=flag-1} flag>0" ${changelog_file} >$release_changelog_file
     local push_tag
-    if [ -z "$backfill" ] ; then push_tag="$new_tag" ; fi
+    if test -z "$backfill"; then push_tag="$new_tag" ; fi
     # relevant metadata files: ChangeLog CONTRIBUTORS COPYING CREDITS README SPONSORS.list doc/release-notes/release-*.html
     signfiles squid-${new_version}.tar.*
     declare -a filelist
@@ -139,7 +139,7 @@ package_release() {
     done
 
     pushcmd="$GH $repo release create $new_tag -F $release_changelog_file --title "v${new_version}" ${filelist[@]}"
-    if [ "$push" = "yes" ] ; then
+    if test "x$push" = "xyes"; then
         eval $pushcmd
         echo "pushed! command:"
     else
@@ -190,24 +190,8 @@ if false &&  ! have_tag "$old_tag" ; then
     exit 2
 fi
 
-## TODO: REDO BACKFILL starting from tarball
-if [ -n "$backfill" ]; then
-    if ! have_tag "$new_tag" ; then
-        echo "Error: backfill requested but missing tag $new_tag"
-        exit 2
-    fi
-    git reset --hard "$new_tag"
-    git clean -fdx
-
-    # TODO: here
-    package_release
-    exit 0
-fi
-
 # not a backfill. Wipe tags
 have_tag "$new_tag" && git tag -d "$new_tag"
-
-
 
 # if the ChangeLog is not ready, prepare one and bail
 setup_release_timestamps $new_tag
@@ -238,9 +222,7 @@ if ! fgrep -q "Changes in squid-${new_version}" ${changelog_file}; then
     exit 0
 fi
 
-
-# TODO: if have_tag $new_release, then get to that point in releasedate and
-#       skip fixing changelog
+# TODO: if have_tag $new_release, then get to that point in releasedate and skip fixing changelog
 # check that the release in configure.ac is what we expect it to be
 if ! $FGREP -q "AC_INIT([Squid Web Proxy],[${new_version}-VCS],[https://bugs.squid-cache.org/],[squid])" configure.ac ; then
     if ! $FGREP -q "AC_INIT([Squid Web Proxy],[${old_version}-VCS],[https://bugs.squid-cache.org/],[squid])" configure.ac ; then
