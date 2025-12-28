@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
-SUPPORTED_VERSIONS=[6]
-BETA_VERSIONS=[7]
+# TODO: use version number syntax to determine these values
+# latest version with X.Y release == supported, any with only X.Y.Z == beta
+SUPPORTED_VERSIONS=[7]
+BETA_VERSIONS=[8]
 
 from subprocess import check_output
 import json
