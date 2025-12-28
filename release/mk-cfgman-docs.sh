@@ -6,14 +6,25 @@
 
 . ~/.server.config || exit $?
 
-# Known Bug:
-#  Does not remove references to directives dropped. This is
-#  an issue for branch 'master' directive erasure.
+# clean the current workspace
+gitCleanWorkspace ()
+{
+  git clean --quiet -xdf --exclude="\.BASE"
+  git checkout --quiet -- .
+}
 
 for version in `ls -1 $SQUID_VCS_PATH | grep squid | cut -d- -f2`; do
 
-	! test -d $SQUID_WWW_PATH/content/Versions/$version/cfgman && continue
+	# Update the website /Versions/v*/cfgman/ HTML documents
+	cd $SQUID_VCS_PATH/squid-$version || continue
+	gitCleanWorkspace
+	git checkout v$version &&
+		./bootstrap.sh && ./configure && make -C ./doc cfgman &&
+		mv -f -t $SQUID_WWW_PATH/content/Versions/$version/cfgman ./doc/cfgman/*
+	gitCleanWorkspace
 
+	# Update the website /Doc/config/ DYN documents
+	! test -d $SQUID_WWW_PATH/content/Versions/$version/cfgman && continue
 	for directive in $SQUID_WWW_PATH/content/Versions/$version/cfgman/*.html; do
 		directive=`basename $directive .html`
 
