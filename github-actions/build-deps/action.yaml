@@ -1,0 +1,7 @@
+name: Install Squid build dependencies
+  if: runner.os == 'Linux'
+  run: |
+    # required for "apt-get build-dep" to work
+    sudo sed --in-place -E 's/# (deb-src.*updates main)/  \1/g' /etc/apt/sources.list
+    sudo apt-get --quiet=2 update
+    sudo apt-get --quiet=2 build-dep squid
