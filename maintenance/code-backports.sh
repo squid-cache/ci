@@ -77,7 +77,7 @@ createPortPr ()
     # skip if there is an existing PR already open awaiting merge
     prlist=`gh pr list -L 1 --repo squid-cache/squid --head $portBranch | wc -l`
     if test "$prlist" -eq 0 ; then
-      gh pr create --repo squid-cache/squid --base v$version --title "v$version Next Backports" --body "" || true
+      gh pr create --repo squid-cache/squid --base v$version --fill || true
       dropLabel $prnum
     fi
   fi
