@@ -66,6 +66,11 @@ createPortPr ()
 {
   portBranch="$1"
 
+  # Reset to clean vN branch
+  git checkout $beQuiet v$version 2>/dev/null &&
+    gitCleanWorkspace &&
+    git pull $beQuiet || exit 1
+
   # Create a PR to merge (if needed)
   if test `git diff --shortstat github/$srcbranch $portBranch 2>/dev/null | wc -l` -ne 0 ; then
     git push $beQuiet -u origin +$portBranch >/dev/null || exit 1
@@ -78,11 +83,9 @@ createPortPr ()
   fi
 }
 
-# Prepare backports branch for updates
-git checkout $beQuiet v$version 2>/dev/null &&
-  gitCleanWorkspace &&
-    git fetch $beQuiet --all &&
-    git pull $beQuiet || exit 1
+# Ensure we have the latest repository state available
+git fetch $beQuiet --all || exit 1
+git pull $beQuiet || exit 1
 
 # Find backports to attempt:
 prlist=`gh pr list -L 1 --repo squid-cache/squid --state closed --label $portLabel | wc -l`
